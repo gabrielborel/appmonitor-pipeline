@@ -1,0 +1,32 @@
+name: Run Monitor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  use-env:
+    name: Usando env context
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mostrar APP_ENV
+        env:
+          APP_ENV: ${{ env.APP_ENV }}
+        run: |
+          echo "Ambiente: $APP_ENV"
+
+  use-vars:
+    name: Usando vars context
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acessar SUPPORT_EMAIL com vars
+        run: |
+          echo "E-mail de suporte: ${{ vars.SUPPORT_EMAIL }}"
+
+  use-secrets:
+    name: Usando secrets context
+    runs-on: ubuntu-latest
+    steps:
+      - name: Usar API_KEY com segurança
+        run: echo "Conectando com a API..."
+        env:
+          API_KEY: ${{ secrets.API_KEY }}

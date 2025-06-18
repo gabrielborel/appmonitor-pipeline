@@ -8,41 +8,41 @@ on:
 
 jobs:
   validate:
-    name: Validate Script
+    name: Validar sintaxe do script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify status check script syntax
+      - name: Verificar sintaxe do status-check.sh
         run: bash -n status-check.sh
 
   test:
-    name: Run Tests
+    name: Executar Testes
     runs-on: ubuntu-latest
     needs: validate
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run tests
+      - name: Executar testes
         run: |
           echo "Running tests ..."
           sleep 1
           exit 0
 
   package:
-    name: Package Application
+    name: Empacotar Aplicação
     runs-on: ubuntu-latest
     needs: test
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create artifact report.zip
+      - name: Criar artefato report.zip
         run: |
           mkdir -p reports
           echo "Relatório gerado em $(date)" > reports/report.txt
           zip -r report.zip reports/
 
-      - name: Upload artifact
+      - name: Upload do artefato
         uses: actions/upload-artifact@v4
         with:
           name: report
