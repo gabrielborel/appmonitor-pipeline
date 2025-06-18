@@ -7,6 +7,7 @@ jobs:
   use-env:
     name: Usando env context
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Mostrar APP_ENV
         env:
