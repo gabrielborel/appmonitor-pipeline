@@ -10,10 +10,8 @@ jobs:
     environment: dev
     steps:
       - name: Mostrar APP_ENV
-        env:
-          APP_ENV: ${{ env.APP_ENV }}
         run: |
-          echo "Ambiente: $APP_ENV"
+          echo "Ambiente: ${{ vars.APP_ENV }}"
 
   use-vars:
     name: Usando vars context
