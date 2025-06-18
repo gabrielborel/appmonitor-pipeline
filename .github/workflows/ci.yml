@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  ACTIONS_STEP_DEBUG: true
+
 jobs:
   validate:
     name: Validar sintaxe do script
@@ -14,7 +17,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Verificar sintaxe do status-check.sh
-        run: bash -n status-check.sh
+        run: |
+          if bash -n status-check.sh; then
+            echo "::notice::Sintaxe OK"
+          else
+            echo "::error::Erro de sintaxe no status-check.sh"
+            exit 1
+          fi
 
   test:
     name: Executar Testes
@@ -27,6 +36,7 @@ jobs:
         run: |
           echo "Running tests ..."
           sleep 1
+          echo "::warning::Nenhum teste automatizado foi encontrado."
           exit 0
 
   package:
@@ -47,3 +57,11 @@ jobs:
         with:
           name: report
           path: report.zip
+
+      - name: Gerar summary do job
+        run: |
+          echo "### Resumo do Job" >> $GITHUB_STEP_SUMMARY
+          echo "- Ambiente: ${{ runner.os }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Resultado: Sucesso" >> $GITHUB_STEP_SUMMARY
+          echo "- [Baixar artefato](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY

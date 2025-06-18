@@ -1,3 +1,5 @@
+![CI Pipeline](https://img.shields.io/github/actions/workflow/status/gabrielborel/appmonitor-pipeline/ci.yml?branch=main)
+
 # appmonitor-pipeline
 
 ## Exercício 2 - Git e Entrega Contínua
@@ -35,3 +37,7 @@ Neste projeto utilizamos diferentes tipos de variáveis no GitHub Actions:
 - Valores **criptografados e sensíveis** (como tokens e senhas).
 - Definidos em Settings → Secrets.
 - Acessados com `${{ secrets.NOME }}`.
+
+## Exercício 4 - Logs
+
+Os logs são fundamentais para entender o que acontece durante a execução de um workflow. No GitHub Actions, podemos usar `echo` para imprimir mensagens no log, ajudando na depuração e monitoramento do processo.
