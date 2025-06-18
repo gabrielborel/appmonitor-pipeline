@@ -1,0 +1,58 @@
+name: Diagnostic Pipeline
+
+on:
+  workflow_dispatch:
+
+env:
+  ACTIONS_STEP_DEBUG: true
+
+jobs:
+  check-vars:
+    name: Verificar variáveis obrigatórias
+    runs-on: ubuntu-latest
+    steps:
+      - name: Iniciar verificação
+        run: echo "Iniciando verificação das variáveis obrigatórias..."
+
+      - name: Verificar APP_ENV
+        id: check_app_env
+        run: |
+          if [ -z "${APP_ENV}" ]; then
+            echo "::error::Variável APP_ENV não está definida!"
+            echo "APP_ENV ausente" >> missing_vars.txt
+            exit 1
+          else
+            echo "APP_ENV está definida: $APP_ENV"
+          fi
+
+      - name: Verificar API_KEY
+        id: check_api_key
+        run: |
+          if [ -z "${API_KEY}" ]; then
+            echo "::error::Variável API_KEY não está definida!"
+            echo "API_KEY ausente" >> missing_vars.txt
+            exit 1
+          else
+            echo "API_KEY está definida (valor oculto por segurança)"
+          fi
+
+      - name: Gerar resumo diagnóstico
+        if: failure() || success()
+        run: |
+          echo "## Diagnóstico das Variáveis Obrigatórias" >> $GITHUB_STEP_SUMMARY
+          if [ -f missing_vars.txt ]; then
+            echo "- ⚠️ Variáveis faltando:" >> $GITHUB_STEP_SUMMARY
+            cat missing_vars.txt | while read var; do
+              echo "  - $var" >> $GITHUB_STEP_SUMMARY
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Sugestões para correção:" >> $GITHUB_STEP_SUMMARY
+            echo "- Defina as variáveis de ambiente no repositório, organização ou ambiente GitHub." >> $GITHUB_STEP_SUMMARY
+            echo "- Use Secrets para variáveis sensíveis como API_KEY." >> $GITHUB_STEP_SUMMARY
+            echo "- Verifique se o workflow está usando o ambiente correto." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ✅ Todas as variáveis obrigatórias estão definidas." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Finalizar diagnóstico
+        run: echo "Diagnóstico concluído."
